@@ -124,7 +124,7 @@ export default new Router({
    - `componentId` 是在data中定义的变量 `null` 
 然后需要在进行传参，传入自己需要的组件名（已经导入前提下）
 - 例子:    
-```js 
+```html 
 <component :is="componentId"></component>
     <button @click="changecomponet('newcom')">New Conponet</button>
     <button @click="changecomponet('newcom2')">New Conponet2</button>
