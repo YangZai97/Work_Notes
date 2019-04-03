@@ -4,11 +4,11 @@
 ## 条件与渲染
 * 当 `v-if` 与 `v-for` 一起使用时，`v-for` 具有比 `v-if` **更高** 的优先级
 ## 父子组件通信
-- 一、子组件获取父组件数据    
+- 一、父组件往子组件中传值    
 ---
 1、首先先在父组件的html上的 子组件标签上 绑定一个变量 ` ":fatherData" ` 然后找到你需要父组件中的data值`msg1`
 
-```js
+```html
 <child :fatherData="msg1"></child>
 data () {
     return {
@@ -26,7 +26,7 @@ data () {
   console.log(this.fatherData)
   ```
   ---
-  - 二、子组件获取父组件方法    
+  - 二、父组件方法传方法给子组件    
 
   第一种方法   
   是直接在子组件中通过`this.$parent.xxx`来调用父组件的方法、数据（但是不是提倡用）   
@@ -210,7 +210,7 @@ const getters = {   //实时监听state值的变化(最新状态)
     isShow(state) {  //方法名随意,主要是来承载变化的showFooter的值
        return state.showFooter
     },
-    getChangedNum(){  //方法名随意,主要是用来承载变化的changableNum的值
+    getChangedNum(state){  //方法名随意,主要是用来承载变化的changableNum的值
        return state.changebleNum
     }
 };
@@ -279,7 +279,7 @@ const getters = {   //实时监听state值的变化(最新状态)
     isShow(state) {  //承载变化的showFooter的值
        return state.showFooter
     },
-    getChangedNum(){  //承载变化的changebleNum的值
+    getChangedNum(state){  //承载变化的changebleNum的值
        return state.changableNum
     }
 };
