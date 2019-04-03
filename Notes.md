@@ -264,8 +264,8 @@ export default store;
 ```
 ---
 ### **action** ###
-- 但这不是理想的改变值的方式；因为在 Vuex 中，mutations里面的方法 都是同步事务，意思就是说：比如这里的一个this.$store.commit('newNum',sum)方法,两个组件里用执行得到的值，每次都是一样的，这样肯定不是理想的需求。
-- 好在vuex官方API还提供了一个actions，这个actions也是个对象变量，最大的作用就是里面的Action方法 可以包含任意异步操作，这里面的方法是用来异步触发mutations里面的方法，actions里面自定义的函数接收一个context参数和要变化的形参，context与store实例具有相同的方法和属性，所以它可以执行context.commit(' '),然后也不要忘了把它也扔进Vuex.Store里面：
+- 但这不是理想的改变值的方式；因为在 Vuex 中，`mutations` 里面的方法 都是同步事务，意思就是说：比如这里的一个 `this.$store.commit('newNum',sum)` 方法,两个组件里用执行得到的值，每次都是一样的，这样肯定不是理想的需求。
+- 好在vuex官方API还提供了一个 `actions` ，这个 `actions` 也是个对象变量，最大的作用就是里面的 `Action` 方法 可以包含任意异步操作，这里面的方法是用来异步触发 `mutations` 里面的方法，`actions` 里面自定义的函数接收一个 `context` 参数和要变化的形参，`context` 与 `store` 实例具有相同的方法和属性，所以它可以执行 `context.commit(' ')` ,然后也不要忘了把它也扔进 `Vuex.Store`里面：
 ```js
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -324,11 +324,11 @@ export default store;
 ```
 ---
 ### **modules** ###
-- 因为在大多数的项目中，我们对于全局状态的管理并不仅仅一种情况的需求，有时有多方面的需求，比如写一个商城项目，你所用到的全局state可能是关于购物车这一块儿的也有可能是关于商品价格这一块儿的；像这样的情况我们就要考虑使用vuex中的 modules 模块化了。
-- 首先，在store文件夹下面新建一个modules文件夹，然后在modules文件里面建立需要管理状态的js文件，既然要把不同部分的状态分开管理，那就要把它们给分成独立的状态文件了，如下图：    
+- 因为在大多数的项目中，我们对于全局状态的管理并不仅仅一种情况的需求，有时有多方面的需求，比如写一个商城项目，你所用到的全局state可能是关于购物车这一块儿的也有可能是关于商品价格这一块儿的；像这样的情况我们就要考虑使用vuex中的 `modules` 模块化了。
+- 首先，在store文件夹下面新建一个 `modules` 文件夹，然后在 `modules` 文件里面建立需要管理状态的js文件，既然要把不同部分的状态分开管理，那就要把它们给分成独立的状态文件了，如下图：    
 
     ![avatar](https://image-static.segmentfault.com/651/356/651356550-5b59c0b8969f4)
-     - 而对应的store文件夹下面的index.js 里面的内容就直接改写成：      
+     - 而对应的store文件夹下面的 `index.js` 里面的内容就直接改写成：      
 ```js 
      import Vue from 'vue';
      import Vuex from 'vuex';
@@ -343,7 +343,7 @@ export default store;
      }
     });
 ```
-- 相应的js，其中的 namespaced:true 表示当你需要在别的文件里面使用( mapGetters、mapActions 接下来会说 )时，里面的方法需要注明来自哪一个模块的方法:
+- 相应的js，其中的 `namespaced:true` 表示当你需要在别的文件里面使用( `mapGetters、mapActions` 接下来会说 )时，里面的方法需要注明来自哪一个模块的方法:
 ```js
 //collection.js
 
@@ -374,7 +374,7 @@ export default {
 }
 //这样就有了关于两个模块的state管理文件了 footerStatus.js（省略）和collection.js
 ```
-- 然后在组件中 `import { mapActions } from 'vuex'` 就可以使用Actions了
+- 然后在组件中 `import { mapActions } from 'vuex'` 就可以使用 `collection` 里 `Actions`的 `invokePushItems` 的方法了
 ```js
  methods:{
       ...mapActions('collection',[ //collection是指modules文件夹下的collection.js
