@@ -146,3 +146,241 @@ methods: {
     },
 //最后再把componentId传给html中 ，渲染出所需要的组件
 ```
+## Vuex
+---
+
+### **store** ### 
+- 1、首先在 vue 2.0+ 项目中安装 
+ `npm install vuex --save`    
+ 然后 在src文件目录下新建一个名为 `store` 的文件夹，为方便引入并在 `store` 文件夹里新建一个 `index.js` ,里面的内容如下:     
+ ```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+const store = new Vuex.Store();
+ 
+export default store;
+```      
+- 2、接下来，在 `main.js` 里面引入 `store` ，然后再全局注入一下，这样一来就可以在任何一个组件里面使用 `this.$store` 了：
+
+```js
+import store from './store'//引入store
+ 
+new Vue({
+  el: '#app',
+  router,
+  store,//使用store
+  template: '<App/>',
+  components: { App }
+})
+```
+ - 3、说了上面的前奏之后，接下来就是纳入正题了，就是开篇说的 `state `的玩法。回到  `store` 文件的 `index.js` 里面，我们先声明一个 `state` 变量，并赋值一个空对象给它，里面随便定义两个初始属性值；然后再在实例化的 `Vuex.Store `里面传入一个空对象，并把刚声明的变量 `state` 仍里面：
+ ```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+ const state={//要设置的全局访问的state对象
+     showFooter: true,
+     changableNum:0
+     //要设置的初始属性值
+   };
+ const store = new Vuex.Store({
+       state
+    });
+ 
+export default store;
+// 实际上做完上面的三个步骤后，你已经可以用this.$store.state.showFooter或this.$store.state.changebleNum在任何一个组件里面获取showfooter和changebleNum定义的值了
+
+// this.$store.state.showFooter 
+// this.$store.state.changebleNum
+```
+---
+### **getters** ###
+- 但这不是理想的获取方式；**Vuex** 官方API提供了一个 `getters` ，和vue计算属性`computed` 一样，来实时监听 `state` 值的变化(最新状态)，并把它也仍进 `Vuex.Store` 里面，具体看下面代码:
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+ const state={   //要设置的全局访问的state对象
+     showFooter: true,
+     changableNum:0
+     //要设置的初始属性值
+   };
+const getters = {   //实时监听state值的变化(最新状态)
+    isShow(state) {  //方法名随意,主要是来承载变化的showFooter的值
+       return state.showFooter
+    },
+    getChangedNum(){  //方法名随意,主要是用来承载变化的changableNum的值
+       return state.changebleNum
+    }
+};
+const store = new Vuex.Store({
+       state,
+       getters
+});
+export default store;
+```
+---
+### **mutations** ###
+- 光有定义的 `state` 的初始值，不改变它不是我们想要的需求，接下来要说的就是 `mutations` 了     
+   - `mutattions` 也是一个对象，这个对象里面可以放改变 `state` 的初始值的**方法**
+   - 具体的用法就是给里面的方法传入参数 `state` 或额外的参数,然后利用**vue**的双向数据驱动进行值的改变，同样的定义好之后也把这个 `mutations` 扔进 `Vuex.Store` 里面，如下： 
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+ const state={   //要设置的全局访问的state对象
+     showFooter: true,
+     changableNum:0
+     //要设置的初始属性值
+   };
+const getters = {   //实时监听state值的变化(最新状态)
+    isShow(state) {  //承载变化的showFooter的值
+       return state.showFooter
+    },
+    getChangedNum(state){  //承载变化的changebleNum的值
+       return state.changableNum
+    }
+};
+const mutations = {
+    show(state) {   //自定义改变state初始值的方法，这里面的参数除了state之外还可以再传额外的参数(变量或对象);
+        state.showFooter = true;
+    },
+    hide(state) {  //同上
+        state.showFooter = false;
+    },
+    newNum(state,sum){ //同上，这里面的参数除了state之外还传了需要增加的值sum
+       state.changableNum+=sum;
+    }
+};
+ const store = new Vuex.Store({
+       state,
+       getters,
+       mutations
+});
+export default store;
+//这时候你完全可以用 this.$store.commit('show') 或 this.$store.commit('hide') 以及 this.$store.commit('newNum',6) 在别的组件里面进行改变showfooter和changebleNum的值了，
+// ** 这里必须用 commit **
+```
+---
+### **action** ###
+- 但这不是理想的改变值的方式；因为在 Vuex 中，mutations里面的方法 都是同步事务，意思就是说：比如这里的一个this.$store.commit('newNum',sum)方法,两个组件里用执行得到的值，每次都是一样的，这样肯定不是理想的需求。
+- 好在vuex官方API还提供了一个actions，这个actions也是个对象变量，最大的作用就是里面的Action方法 可以包含任意异步操作，这里面的方法是用来异步触发mutations里面的方法，actions里面自定义的函数接收一个context参数和要变化的形参，context与store实例具有相同的方法和属性，所以它可以执行context.commit(' '),然后也不要忘了把它也扔进Vuex.Store里面：
+```js
+import Vue from 'vue';
+import Vuex from 'vuex';
+Vue.use(Vuex);
+ const state={   //要设置的全局访问的state对象
+     showFooter: true,
+     changableNum:0
+     //要设置的初始属性值
+   };
+const getters = {   //实时监听state值的变化(最新状态)
+    isShow(state) {  //承载变化的showFooter的值
+       return state.showFooter
+    },
+    getChangedNum(){  //承载变化的changebleNum的值
+       return state.changableNum
+    }
+};
+const mutations = {
+    show(state) {   //自定义改变state初始值的方法，这里面的参数除了state之外还可以再传额外的参数(变量或对象);
+        state.showFooter = true;
+    },
+    hide(state) {  //同上
+        state.showFooter = false;
+    },
+    newNum(state,sum){ //同上，这里面的参数除了state之外还传了需要增加的值sum
+       state.changableNum+=sum;
+    }
+};
+ const actions = {
+    hideFooter(context) {  //自定义触发mutations里函数的方法，context与store 实例具有相同方法和属性
+        context.commit('hide');
+    },
+    showFooter(context) {  //同上注释
+        context.commit('show');
+    },
+    getNewNum(context,num){   //同上注释，num为要变化的形参
+        context.commit('newNum',num)
+     }
+};
+  const store = new Vuex.Store({
+       state,
+       getters,
+       mutations,
+       actions
+});
+export default store;
+// 而在外部组件里进行全局执行actions里面方法的时候，你只需要用执行  dispatch
+
+// this.$store.dispatch('hideFooter')
+
+// 或this.$store.dispatch('showFooter')
+
+// 以及this.$store.dispatch('getNewNum'，6) //6要变化的实参
+
+// 这样就可以全局改变改变showfooter或changebleNum的值了。
+```
+---
+### **modules** ###
+- 因为在大多数的项目中，我们对于全局状态的管理并不仅仅一种情况的需求，有时有多方面的需求，比如写一个商城项目，你所用到的全局state可能是关于购物车这一块儿的也有可能是关于商品价格这一块儿的；像这样的情况我们就要考虑使用vuex中的 modules 模块化了。
+- 首先，在store文件夹下面新建一个modules文件夹，然后在modules文件里面建立需要管理状态的js文件，既然要把不同部分的状态分开管理，那就要把它们给分成独立的状态文件了，如下图：    
+
+    ![avatar](https://image-static.segmentfault.com/651/356/651356550-5b59c0b8969f4)
+     - 而对应的store文件夹下面的index.js 里面的内容就直接改写成：      
+```js 
+     import Vue from 'vue';
+     import Vuex from 'vuex';
+     import footerStatus from './modules/footerStatus'
+     import collection from './modules/collection'
+     Vue.use(Vuex);
+
+     export default new Vuex.Store({
+      modules:{
+        footerStatus,
+        collection
+     }
+    });
+```
+- 相应的js，其中的 namespaced:true 表示当你需要在别的文件里面使用( mapGetters、mapActions 接下来会说 )时，里面的方法需要注明来自哪一个模块的方法:
+```js
+//collection.js
+
+const state={
+    collects:[],  //初始化一个colects数组
+};
+const getters={
+  renderCollects(state){ //承载变化的collects
+    return state.collects;
+  }
+};
+const mutations={
+     pushCollects(state,items){ //如何变化collects,插入items
+        state.collects.push(items)
+     }
+ };
+const actions={
+    invokePushItems(context,item){ //触发mutations里面的pushCollects ,传入数据形参item 对应到items
+        context.commit('pushCollects',item);
+    }
+};
+export default {
+     namespaced:true,//用于在全局引用此文件里的方法时标识这一个的文件名
+     state,
+     getters,
+     mutations,
+     actions
+}
+//这样就有了关于两个模块的state管理文件了 footerStatus.js（省略）和collection.js
+```
+- 然后在组件中 `import { mapActions } from 'vuex'` 就可以使用Actions了
+```js
+ methods:{
+      ...mapActions('collection',[ //collection是指modules文件夹下的collection.js
+          'invokePushItems'  //collection.js文件中的actions里的方法，在上面的@click中执行并传入实参
+      ])
+  }
+  // 这样一来，在这个组件里面操作的 collecttion.js 中的state的数据，在其他的任何的一个组件里面都会得到相应的更新变化了
+```
+
