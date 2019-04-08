@@ -197,7 +197,7 @@ export default store;
 ---
 ### **getters** ###
 - 但这不是理想的获取方式；**Vuex** 官方API提供了一个 `getters` ，和vue计算属性`computed` 一样，来实时监听 `state` 值的变化(最新状态)，并把它也仍进 `Vuex.Store` 里面，具体看下面代码:
-```js
+```js 
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
