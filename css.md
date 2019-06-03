@@ -132,3 +132,87 @@
     * fixed：固定布局的算法。
 #### 其他
 - cursor ：设置在对象上移动的鼠标是否采用预定的光标形状，常用在a标签。
+
+## 选择器
+- 类型选择器
+    - 示例
+        ```
+        a { text-decoration:none; } 
+        ```
+- 包含选择器
+    - 
+    ```
+    div span {
+        ...
+    }
+    // 查找div下的span
+    ```
+- id选择器：#
+- 类选择器：.
+- 选择符分组（多选）
+    * 
+    ``` 
+    .h1,.h2,div span{
+        ...
+    }
+    ```
+## 伪类
+- :link 用于设置a标签在未被访问前的样式属性，默认值由浏览器决定
+- :hover 用于设置对象在鼠标悬停时的样式属性
+- :active 用于设置对象在被用户激活(在鼠标点击与释放之间发生的事件)时激活的样式属性
+- :visited 用于设置a标签链接地址已被访问的样式属性
+- :first-child
+    ```
+    p a:first-child{
+        ...
+    }
+    ```
+    设置p的第一个a标签的样式属性
+## 伪对象
+- :before
+    ```
+    span:before{
+        content: 这是内容
+    }
+    ```
+- :after
+    ```
+    span:after{
+        content:这是内容
+    }
+    ```
+    设置span在对象前发生的内容
+- :first-letter 设置对象内的第一个字符的样式表属性。
+    ```
+    a:first-letter{
+        color:red
+    }
+    ```
+- :first-line 设置对象内的第一个行的样式表属性。
+    ```
+    div:first-line{
+        color:green
+    }
+    ```
+## 规则
+- @import url('相对或绝对路径指定导入样式列表文件')
+    ```
+        @import "print.css"
+        @import url("foo.css") screen, print;
+    ```
+- @font-face
+    ```
+    @font-face{
+        font-family:name;src:url(...);
+         font-weight: bold;
+    }
+    ```
+- @media 媒体查询
+    ```
+    // 设置显示器用字体的尺寸
+    @media screen{
+        BODY{
+            font-size：12px
+        }
+    }
+    ```
