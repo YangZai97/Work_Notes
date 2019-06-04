@@ -217,7 +217,7 @@
     }
     ```
 # 总结知识点
-## 知识点
+## 样式知识点
 1、横线布局我们优先选择浮动，虽然定位任何布局都能解决问题，但是也有很多问题，通过浮动，我们可以清除行内元素的间隙，而且盒子的外边距不影响其他盒子。   
 2、定位一定要遵循‘子绝父相’。（子类想要使用绝对定位，一定要在他的父类写上相对定位，不然子类移动的参考物就是更上级的相对定位，如往上走一直没有相对定位，则以body作为参考物）
 - 如果定位了，没有设置top、left等这些控制位置的属性，默认会按照他原本在标准流的位置呈现   
@@ -340,3 +340,57 @@ color ， font- ， text- ，line-，cursor
     overflow:hidden //超出隐藏
     text-overflow:ellipsis //设置省略号
     ```
+## 弹性布局知识点
+1、使用display:flex 
+- 行内元素也可以使用flex布局(display:inline-flex)
+- Webkit内核的浏览器必须加上`-webkit`兼容
+    ```
+    .box{
+        display:-webkit-flex
+        display:flex
+    }
+    ```
+- 注意：在使用flex布局以后，子元素的flat、clear、vertical-align 属性将失效。
+
+2、容器的属性
+- flex-direction 决定属性排列方向
+    - row (默认值)：主轴为水平方向，起点在左侧。
+        - 起点。。。->
+    - row-reverse: 主轴为水平方式,起点在右侧。
+        - <- 。。。起点 
+    - column：主轴为垂直方向，起点在上沿。
+        -    起点   
+          。  |   
+          。  V   
+          。
+    - column-reverse：主轴为垂直方向，起点在下沿。
+        - 。   
+          。 △   
+          。 |   
+          起点
+- flex-wrap 决定如果一条轴线排列不下，如何换行
+    - nowrap (默认值)：不换行   
+         12345678
+    - wrap:换行，第一行在上方   
+        123456   
+        78
+    - warp-reverse :换行第一行在下方   
+        78   
+        1234567
+- flex-flow 就是flex-direction和flex-warp属性的简写方式
+    - 默认值 ：row nowrap（row + nowrap）
+- justify-content 属性是定义了项目在主轴上的对齐方式
+    - flex-start（默认值） 左对齐
+    - flex-end 右对齐
+    - center 居中
+    - space-between 两端对齐，项目之间的间隔都相等。
+    - space-around 每个项目两侧的间隔相等。所以，项目之间的间隔比项目与边框的间隔大一倍。
+- align-items 属性定义项目在交叉轴上如何对齐
+    - stretch （默认值） 如果项目未设置高度或设为auto，将占满整个容器的高度
+    - flex-start 交叉轴的起点对齐
+    - flex-end 交叉轴的终点对齐
+    - center 交叉轴的中点对齐
+    - baseline 项目的第一行文字的基线对齐 
+
+3、order属性
+- order属性定义项目的排列顺序，数值越小，排列越靠前，默认为0
